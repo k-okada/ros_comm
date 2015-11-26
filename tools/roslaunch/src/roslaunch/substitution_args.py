@@ -113,7 +113,25 @@ def _anon(resolved, a, args, context):
         anon_context[id] = resolve_to
         return resolved.replace("$(%s)"%a, resolve_to)
 
+def _param(resolved, a, args, context):
+    """
+    process $(param) arg
+    @return: updated resolved argument
+    @rtype: str
+    @raise SubstitutionException: if arg invalidly specified
+    """
+    print("___param")
+    if len(args) != 1:
+        raise SubstitutionException("$(param var) command only accepts one argument [%s]"%a)
+    try:
+        print(context)
+        print(dir(context))
+        print(context.keys())
+        return resolved.replace("$(%s)"%a, "hoge")
+    except KeyError as e:
+        raise SubstitutionException("ros parameter %s is not set"%str(e))
 
+    
 def _find(resolved, a, args, context):
     """
     process $(find PKG)
@@ -290,6 +308,7 @@ def resolve_args(arg_str, context=None, resolve_anon=True):
         'optenv': _optenv,
         'anon': _anon,
         'arg': _arg,
+        'param': _param,
     }
     resolved = _resolve_args(arg_str, context, resolve_anon, commands)
     # than resolve 'find' as it requires the subsequent path to be expanded already
@@ -300,7 +319,7 @@ def resolve_args(arg_str, context=None, resolve_anon=True):
     return resolved
 
 def _resolve_args(arg_str, context, resolve_anon, commands):
-    valid = ['find', 'env', 'optenv', 'anon', 'arg']
+    valid = ['find', 'env', 'optenv', 'anon', 'arg', 'param']
     resolved = arg_str
     for a in _collect_args(arg_str):
         splits = [s for s in a.split(' ') if s]

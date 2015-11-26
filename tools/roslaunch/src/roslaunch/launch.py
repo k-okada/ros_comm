@@ -493,6 +493,7 @@ class ROSLaunchRunner(object):
                 print("WARN: master is not behaving well (unexpected return value when looking up node)", file=sys.stderr)
                 self.logger.error("ERROR: master return [%s][%s] on lookupNode call"%(code,msg))
                 
+        print("replace param")
         for node in tolaunch:
             node_name = rosgraph.names.ns_join(node.namespace, node.name)
             name, success = self.launch_node(node, core=True)

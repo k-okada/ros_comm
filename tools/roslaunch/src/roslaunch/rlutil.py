@@ -212,6 +212,7 @@ def check_roslaunch(f):
     # load all node defs
     nodes = []
     for filename, rldeps in file_deps.items():
+        print (filename, "__DEPS__",rldeps)
         nodes.extend(rldeps.nodes)
 
     # check for missing packages
