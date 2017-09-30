@@ -64,6 +64,10 @@ def rosmaster_main(argv=sys.argv, stdout=sys.stdout, env=os.environ):
     parser.add_option("-p", "--port", 
                       dest="port", default=0,
                       help="override port", metavar="PORT")
+    parser.add_option("-d", "--debug",
+                      dest="debug", action="store_true", default=False,
+                      help="print debug information")
+
     options, args = parser.parse_args(argv[1:])
 
     # only arg that zenmaster supports is __log remapping of logfilename
@@ -75,6 +79,10 @@ def rosmaster_main(argv=sys.argv, stdout=sys.stdout, env=os.environ):
     port = rosmaster.master.DEFAULT_MASTER_PORT
     if options.port:
         port = int(options.port)
+
+    if options.debug:
+        rosmaster.master_api.LOG_API = True
+        logging.getLogger("rosmaster.master").setLevel(logging.DEBUG)
 
     if not options.core:
         print("""
